@@ -552,6 +552,7 @@ ngx_http_auth_spnego_basic(
         spnego_log_error("Kerberos error:", krb5_get_err_text(kcontext, code));
         spnego_error(NGX_ERROR);
     }
+    spnego_debug1("username is %s. principal data is %s", name, (const char *) user.data);
 
     krb5_get_init_creds_opt_init(&gic_options);
 
