@@ -639,14 +639,15 @@ env_ktname(
     ngx_str_t *keytab)
 {
     char *ktname = NULL;
-    size_t kt_sz = sizeof("KRB5_KTNAME=") + keytab->len;
+    size_t kt_sz = keytab->len + 1;
 
-    ktname = (char *) ngx_pcalloc(r->pool, kt_sz + 1);
+    ktname = (char *) ngx_pcalloc(r->pool, kt_sz);
     if (NULL == ktname) {
         return false;
     }
-    ngx_snprintf((u_char *) ktname, kt_sz, "KRB5_KTNAME=%V%Z", keytab);
-    putenv(ktname);
+  
+    ngx_snprintf((u_char *) ktname, kt_sz, "%V%Z", keytab);
+    setenv("KRB5_KTNAME", ktname, 0);
 
     spnego_debug1("Use keytab %V", keytab);
     return true;
